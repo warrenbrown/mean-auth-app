@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+const mongoose = require('mongoose').set('debug', true);
 const bcrypt = require('bcrypt-nodejs');
 const config = require('../config/database');
 const Schema = mongoose.Schema;
@@ -31,4 +31,9 @@ userSchema.pre('save', function(next) {
   });
 });
 
-module.exports = mongoose.model('user', userSchema)
+// Methods to compare password to encrypted password upon login
+userSchema.methods.comparePassword = function(password) {
+  return bcrypt.compareSync(password, this.password); // Return comparison of login password to password in database (true or false)
+};
+
+module.exports = mongoose.model('User', userSchema)
