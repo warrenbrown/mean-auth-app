@@ -26,6 +26,11 @@ mongoose.connect(config.uri, (err) => {
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./config/passport')(passport);
 
 app.use('/api', api)
 
