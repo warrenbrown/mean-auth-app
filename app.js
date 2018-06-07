@@ -5,6 +5,7 @@ const cors = require('cors');
 const passport = require('passport');
 const mongoose = require('mongoose');
 const config = require('./config/database');
+const logger = require('morgan');
 
 const api = require('./routes/api')
 
@@ -22,10 +23,15 @@ mongoose.connect(config.uri, (err) => {
   }
 });
 
-
+app.use(logger('dev'));
 app.use(express.static(path.join(__dirname, 'dist')));
 app.use(bodyParser.urlencoded({ extended: false}));
 app.use(bodyParser.json());
+//passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
+
+require('./config/passport')(passport);
 
 app.use('/api', api)
 
